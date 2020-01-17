@@ -1,111 +1,300 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:advitiya/schdule.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import './About.dart' as about;
+import './lecture.dart';
+import './schdule.dart';
+import 'dart:convert';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
+      routes: <String, WidgetBuilder>{}));
+}
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class HomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var _home, _shedule, _pronight;
+// static const platform = const MethodChannel('com.softcom.zeitgeist/map_view');
+
+
+  _buildschedule() {
+    return FutureBuilder(
+      future: getDataFromServer(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Container(
+              color: Colors.black,
+              child: Center(
+                child: Image.asset(
+                  'Images/appbar.png',
+                  fit: BoxFit.fill,
+                ),
+              ));
+        if (snapshot.hasData) {
+          return Schdule(snapshot.data);
+        } else if (snapshot.hasError) {
+          return Center(
+              child: RaisedButton(
+            child: Icon(Icons.replay),
+            onPressed: () {
+              setState(() {
+                _home = _buildschedule();
+              });
+            },
+          ));
+        } else
+          return Container(
+              color: Colors.black,
+              child: Center(
+                child: Image.asset(
+                  'Images/loading.gif',
+                  fit: BoxFit.fill,
+                ),
+              ));
+      },
     );
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void initState() {
+    _pronight = CarouselDemo();
+    _shedule  =_buildschedule();
+    _home = _shedule;
+    super.initState();
   }
+
+  int _selectedPage = 0;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+    return Stack(children: <Widget>[
+      new Container(
+        child: Image.asset(
+          'Images/appbar.png',
+          fit: BoxFit.fill,
         ),
+        color: Colors.black,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+      Scaffold(
+        backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: Text(
+              "Advitiya 2020",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.transparent,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.notifications_active,
+                  size: 30.0,
+                  color: Colors.redAccent,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/notipage');
+                },
+              )
+            ],
+          ),
+          drawer: Drawer(
+              child: Container(
+                  color: Colors.white,
+                  child: ListView(
+                    children: <Widget>[
+                      DrawerHeader(
+                          padding: EdgeInsets.all(0),
+                          child: Image.asset(
+                            'Images/drawerposter.jpg',
+                            fit: BoxFit.fill,
+                          )),
+                      Container(
+                        //margin: EdgeInsets.only(top: 50),
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(
+                            'REGISTER',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: Icon(Icons.add),
+                          onTap: () {
+                            launch("https://www.advitiya.in/events/");
+                          },
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(
+                            'TECHCONNECT',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: Icon(Icons.work),
+                          onTap: () {
+                            launch("https://www.advitiya.in/techconnect/");
+                          },
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(
+                            'WORKSHOPS',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: Icon(Icons.computer),
+                          onTap: () {
+                            launch("https://www.advitiya.in/workshop/");
+                          },
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(
+                            'CAMPUS AMBASSADOR',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: Icon(Icons.group_work),
+                          onTap: () {
+                            launch("https://www.advitiya.in/ca/");
+                          },
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(
+                            'SPONSERS',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: Icon(Icons.attach_money),
+                          onTap: () {
+                            launch("https://www.advitiya.in/sponsors/");
+                          },
+                        ),
+                      ),
+                      Container(
+                        child: ListTile(
+                          title: Text(
+                            'ABOUT US',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: Icon(Icons.info),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    about.About("About us")));
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text("Phone: +91 842 7012 721"),
+                        leading: Icon(Icons.phone),
+                      ),
+                      ListTile(
+                        title: Text("zeitgeist.pr@iitrpr.ac.in"),
+                        leading: Icon(Icons.email),
+                      ),
+                    ],
+                  ))),
+          body: _home,
+          bottomNavigationBar: Theme(
+            data: Theme.of(context).copyWith(
+
+                // sets the background color of the `BottomNavigationBar`
+                canvasColor: Colors.transparent,
+                // sets the active color of the `BottomNavigationBar` if `Brightness` is light
+                primaryColor: Colors.white,
+                textTheme: Theme.of(context)
+                    .textTheme
+                    .copyWith(caption: new TextStyle(color: Colors.white))),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("Images/appbar.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: BottomNavigationBar(
+                currentIndex: _selectedPage,
+                onTap: (int index) {
+                  setState(() {
+                    _selectedPage = index;
+                    if (index == 0)
+                      _home = _shedule;
+                    else if (index == 1)
+                      _home = _pronight;
+                    else
+                      _home = _pronight;
+                  });
+                },
+                items: [
+                  BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.event,
+                        color: Colors.lightBlueAccent[400],
+                      ),
+                      title: Text(
+                        'Schedule',
+                      ),
+                      backgroundColor: Color.fromRGBO(166, 16, 30, 1)),
+                  BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.star,
+                        color: Colors.lightBlueAccent[400],
+                      ),
+                      title: Text('Pro-Nights'),
+                      backgroundColor: Color.fromRGBO(166, 16, 30, 1)),
+                  BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.map,
+                        color: Colors.lightBlueAccent[400],
+                      ),
+                      title: Text('Map'),
+                      backgroundColor: Color.fromRGBO(166, 16, 30, 1))
+                ],
+              ),
+            ),
+          )),
+    ]);
   }
+
+
+  getDataFromServer() async {
+    final response =
+        await http.get("https://advitiya.in/api/events/");
+
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON.
+      var jsonData = json.decode(response.body);
+      jsonData.sort((a, b) {
+        return a['start_date_time']
+            .toString()
+            .compareTo(b['start_date_time'].toString());
+      });
+      return jsonData;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+
+
+
+
 }
+
+
+
+
