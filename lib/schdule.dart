@@ -2,7 +2,7 @@ import 'package:advitiya/model.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 class Schdule extends StatefulWidget {
   final List<EventModel> data;
   Schdule(this.data);
@@ -100,7 +100,6 @@ class DayOneState extends State<DayOne> {
   _getEventday(day) {
     List<EventModel> sampleEvents = [];
     for (EventModel currentEvent in data) {
- 
       if (currentEvent.dateTime.startsWith(day)) {
         sampleEvents.add(currentEvent);
       }
@@ -192,7 +191,6 @@ class DayOneState extends State<DayOne> {
 
 ////////////////////////////////data to test
 
-
 Widget _buildName({String imageAsset, String name, double score}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -226,7 +224,7 @@ Widget _buildName({String imageAsset, String name, double score}) {
 }
 
 class CustomDialog extends StatelessWidget {
-  final EventModel  detail;
+  final EventModel detail;
   CustomDialog(this.detail);
   @override
   Widget build(BuildContext context) {
@@ -243,37 +241,235 @@ class CustomDialog extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            height: 400.0,
-            width: 360.0,
-            child: ListView(
+            padding: EdgeInsets.only(top:15,left:10,right:10) ,
+            height: 420.0,
+            width: 300.0,
+            child: Column(
               children: <Widget>[
-                SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    detail.name,
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold),
+                CachedNetworkImage(
+                  imageUrl: detail.avatarUrl,
+                  imageBuilder: (context, imageProvider) => CircleAvatar(
+                    foregroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.grey,
+                    backgroundImage: imageProvider,
+                    radius: 30.0,
                   ),
+                  placeholder: (context, url) => Container(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
-                SizedBox(height: 20),
-                _buildName(
-                    imageAsset: 'Images/appbar.png',
-                    name: "Name 1",
-                    score: 1000),
-                _buildName(
-                    imageAsset: 'Images/appbar.png',
-                    name: "Name 2",
-                    score: 2000),
-                _buildName(
-                    imageAsset: 'Images/appbar.png',
-                    name: "Name 3",
-                    score: 3000),
-                _buildName(
-                    imageAsset: 'Images/appbar.png',
-                    name: "Name 6",
-                    score: 6000),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                ),
+                Text(
+                  detail.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Venue : ",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Flexible(
+                                          child: Text(
+                        detail.venue,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4),
+                ),
+
+ Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                        "Team Lower Limit : ",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      detail.teamLowerLimit.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Team Upper Limit : " ,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      detail.teamUpperLimit.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Fee(in INR) : ", 
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      detail.fee.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Prize(in INR) : " ,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                       
+                      (  double.parse(detail.prize)).toString()+"K",
+
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Coordinator : " ,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Flexible(
+                                          child: Text(
+                        detail.manager['name'],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+               Padding(
+                  padding: EdgeInsets.only(top: 4),
+                ),
+               Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                       "Contact Details : ",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      detail.manager['mobile'],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                   
+                    FlatButton(
+                    
+                      child: Text("Rulebook"),
+                      color: Colors.orangeAccent,
+                      onPressed:(){
+                          launch(detail.rulebook);
+                      } ,
+                    )
+                  ],
+                ),
+
+                   Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                   
+                    FlatButton(
+                     shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(18)),
+                      child: Text("Register"),
+                      color: Colors.orangeAccent,
+                      onPressed:(){
+                          launch(  "https://www.advitiya.in/events/"+detail.id.toString()+"/");
+                      } ,
+                    )
+                  ],
+                ),
+               
+
+              
+              
+              
               ],
             ),
           ),
