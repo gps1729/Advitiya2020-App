@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:advitiya/model.dart';
 import 'package:http/http.dart' as http;
 import 'package:advitiya/schdule.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _home, _shedule, _pronight;
 // static const platform = const MethodChannel('com.softcom.zeitgeist/map_view');
-
 
   _buildschedule() {
     return FutureBuilder(
@@ -63,12 +63,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
-
   @override
   void initState() {
     _pronight = CarouselDemo();
-    _shedule  =_buildschedule();
+    _shedule = _buildschedule();
     _home = _shedule;
     super.initState();
   }
@@ -86,7 +84,7 @@ class _HomePageState extends State<HomePage> {
         color: Colors.black,
       ),
       Scaffold(
-        backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text(
               "Advitiya 2020",
@@ -269,11 +267,8 @@ class _HomePageState extends State<HomePage> {
           )),
     ]);
   }
-
-
-  getDataFromServer() async {
-    final response =
-        await http.get("https://advitiya.in/api/events/");
+Future<List<EventModel>> getDataFromServer() async {
+    final response = await http.get("https://advitiya.in/api/events/");
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON.
@@ -283,18 +278,14 @@ class _HomePageState extends State<HomePage> {
             .toString()
             .compareTo(b['start_date_time'].toString());
       });
-      return jsonData;
+      List<EventModel> events = [];
+      for (Map event in jsonData) {
+        events.add(EventModel.fromJson(event));
+      }
+      return events;
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
     }
   }
-
-
-
-
 }
-
-
-
-

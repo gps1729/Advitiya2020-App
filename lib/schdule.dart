@@ -1,9 +1,10 @@
+import 'package:advitiya/model.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class Schdule extends StatefulWidget {
-  final data;
+  final List<EventModel> data;
   Schdule(this.data);
   @override
   _SchduleState createState() => _SchduleState();
@@ -97,19 +98,11 @@ class DayOneState extends State<DayOne> {
   }
 
   _getEventday(day) {
-    var jsonData = data;
-
-    List<ChatModel> sampleEvents = [];
-    for (var u in jsonData) {
-      ChatModel sampleEvent =
-          ChatModel(u['name'], u['venue'], u['start_date_time'], u['image']);
-      String s = "";
-      for (var i = 0; i < 10; i++) {
-        s += sampleEvent.dateTime[i];
-      }
-
-      if (s == day) {
-        sampleEvents.add(sampleEvent);
+    List<EventModel> sampleEvents = [];
+    for (EventModel currentEvent in data) {
+ 
+      if (currentEvent.dateTime.startsWith(day)) {
+        sampleEvents.add(currentEvent);
       }
     }
 
@@ -117,7 +110,7 @@ class DayOneState extends State<DayOne> {
   }
 
   Widget getListViewDay(day) {
-    var eventList = _getEventday(day);
+    List<EventModel> eventList = _getEventday(day);
     return Container(
       color: Color.fromRGBO(21, 24, 83, 1),
       child: ListView.builder(
@@ -129,7 +122,7 @@ class DayOneState extends State<DayOne> {
     );
   }
 
-  Widget getListTile(ChatModel sampleEvent) {
+  Widget getListTile(EventModel sampleEvent) {
     DateTime startdateTime = DateTime.parse(sampleEvent.dateTime);
     final starttime = formatDate(startdateTime, [hh, ':', nn, ' ', am]);
     var listTile = Card(
@@ -189,7 +182,7 @@ class DayOneState extends State<DayOne> {
           onTap: () {
             showDialog(
                 context: context,
-                builder: (BuildContext context) => CustomDialog());
+                builder: (BuildContext context) => CustomDialog(sampleEvent));
           },
         ));
 
@@ -198,14 +191,7 @@ class DayOneState extends State<DayOne> {
 }
 
 ////////////////////////////////data to test
-class ChatModel {
-  final String name;
-  final String venue;
-  final String dateTime;
-  final String avatarUrl;
 
-  ChatModel(this.name, this.venue, this.dateTime, this.avatarUrl);
-}
 
 Widget _buildName({String imageAsset, String name, double score}) {
   return Padding(
@@ -240,10 +226,12 @@ Widget _buildName({String imageAsset, String name, double score}) {
 }
 
 class CustomDialog extends StatelessWidget {
+  final EventModel  detail;
+  CustomDialog(this.detail);
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 16,
       child: dialogContent(context),
     );
@@ -262,7 +250,7 @@ class CustomDialog extends StatelessWidget {
                 SizedBox(height: 20),
                 Center(
                   child: Text(
-                    "Leaderboard",
+                    detail.name,
                     style: TextStyle(
                         fontSize: 24,
                         color: Colors.blue,
@@ -299,10 +287,10 @@ class CustomDialog extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: CircleAvatar(
                   radius: 25.0,
-                  backgroundColor: Colors.black,
+                  backgroundColor: Colors.white,
                   child: Icon(
                     Icons.close,
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 40,
                   ),
                 ),
