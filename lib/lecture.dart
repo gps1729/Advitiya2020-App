@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:page_indicator/page_indicator.dart';
+import 'package:date_format/date_format.dart';
 
 class CarouselDemo extends StatefulWidget {
   CarouselDemo() : super();
@@ -18,7 +19,7 @@ class CarouselDemoState extends State<CarouselDemo>
   void _animateSlider(length) {
     Future.delayed(Duration(seconds: 5)).then((_) {
       int nextPage = _controller.page.round() + 1;
-     
+
       if (nextPage == length) {
         nextPage = 0;
       }
@@ -42,6 +43,10 @@ class CarouselDemoState extends State<CarouselDemo>
             child: new PageView(
                 controller: _controller,
                 children: List.generate(talks.length, (index) {
+                  DateTime startdateTime =
+                      DateTime.parse(talks[index]['start_date_time']);
+                  final starttime = formatDate(
+                      startdateTime, [d, ' ', M, ', ', hh, ':', nn, ' ', am]);
                   return Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -64,35 +69,83 @@ class CarouselDemoState extends State<CarouselDemo>
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error),
                         ),
-                        Container(
-                            child: Column(
-                          children: <Widget>[
-                            Text(
-                              talks[index]['name'],
-                              style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.normal),
-                            ),
-                             Text(
-                              talks[index]['venue'],
-                              style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.normal),
-                            ),
-                            Text(
-                              talks[index]['start_date_time'],
-                              style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.normal),
-                            )
-                          ],
-                        ))
+                        Positioned(
+                          left: 20,
+                          bottom: 36,
+                          child: Container(
+                              width: MediaQuery.of(context).size.width - 20,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    blurRadius: 25.0,
+                                    spreadRadius: 7.0,
+                                  )
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    talks[index]['name'],
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.normal),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Column(
+                                        children: <Widget>[
+                                          Text(
+                                            'Venue: ' + talks[index]['venue'],
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            starttime,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      FlatButton(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.info,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                            Text(
+                                              ' About Speaker',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  SpeakerDialog(talks[index]));
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              )),
+                        )
                       ],
                     ),
                   );
@@ -100,7 +153,7 @@ class CarouselDemoState extends State<CarouselDemo>
             length: talks.length,
             indicatorSpace: 10,
             indicatorColor: Colors.grey[350],
-            indicatorSelectorColor: Colors.grey,
+            indicatorSelectorColor: Colors.blue,
           );
           return Stack(
             children: <Widget>[
@@ -158,5 +211,103 @@ class CarouselDemoState extends State<CarouselDemo>
       // If that call was not successful, throw an error.
       throw Exception('Failed to load data');
     }
+  }
+}
+
+class SpeakerDialog extends StatelessWidget {
+  final detail;
+  SpeakerDialog(this.detail);
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 16,
+      child: dialogContent(context),
+    );
+  }
+
+  Widget dialogContent(BuildContext context) {
+    return Container(
+      color: Color.fromRGBO(21, 24, 83, 1),
+      margin: EdgeInsets.only(left: 0.0, right: 0.0),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            width: 360.0,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    detail['name'],
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Scrollbar(
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              detail['para1'],
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              detail['para2'],
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              detail['para3'],
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              detail['para4'],
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Positioned(
+            right: 0.0,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Align(
+                alignment: Alignment.topRight,
+                child: CircleAvatar(
+                  radius: 25.0,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.black,
+                    size: 40,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
