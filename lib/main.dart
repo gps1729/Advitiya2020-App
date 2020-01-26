@@ -1,10 +1,9 @@
-import 'dart:io';
+import 'package:advitiya/drawer.dart';
 import 'package:advitiya/model.dart';
+import 'package:advitiya/notification_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:advitiya/schdule.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import './About.dart' as about;
 import './lecture.dart';
 import './schdule.dart';
 import 'dart:convert';
@@ -13,7 +12,9 @@ void main() {
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
-      routes: <String, WidgetBuilder>{}));
+      routes: <String, WidgetBuilder>{
+        "/notipage": (BuildContext context) => NotificationPage(),
+      }));
 }
 
 class HomePage extends StatefulWidget {
@@ -79,7 +80,7 @@ class _HomePageState extends State<HomePage> {
       new Container(
         child: Image.asset(
           'Images/appbar.png',
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
         ),
         color: Colors.black,
       ),
@@ -96,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(
                   Icons.notifications_active,
                   size: 30.0,
-                  color: Colors.redAccent,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   Navigator.pushNamed(context, '/notipage');
@@ -104,108 +105,7 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
-          drawer: Drawer(
-              child: Container(
-                  color: Colors.white,
-                  child: ListView(
-                    children: <Widget>[
-                      DrawerHeader(
-                          padding: EdgeInsets.all(0),
-                          child: Image.asset(
-                            'Images/drawerposter.jpg',
-                            fit: BoxFit.fill,
-                          )),
-                      Container(
-                        //margin: EdgeInsets.only(top: 50),
-                        color: Colors.white,
-                        child: ListTile(
-                          title: Text(
-                            'REGISTER',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          leading: Icon(Icons.add),
-                          onTap: () {
-                            launch("https://www.advitiya.in/events/");
-                          },
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        child: ListTile(
-                          title: Text(
-                            'TECHCONNECT',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          leading: Icon(Icons.work),
-                          onTap: () {
-                            launch("https://www.advitiya.in/techconnect/");
-                          },
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        child: ListTile(
-                          title: Text(
-                            'WORKSHOPS',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          leading: Icon(Icons.computer),
-                          onTap: () {
-                            launch("https://www.advitiya.in/workshop/");
-                          },
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        child: ListTile(
-                          title: Text(
-                            'CAMPUS AMBASSADOR',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          leading: Icon(Icons.group_work),
-                          onTap: () {
-                            launch("https://www.advitiya.in/ca/");
-                          },
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        child: ListTile(
-                          title: Text(
-                            'SPONSERS',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          leading: Icon(Icons.attach_money),
-                          onTap: () {
-                            launch("https://www.advitiya.in/sponsors/");
-                          },
-                        ),
-                      ),
-                      Container(
-                        child: ListTile(
-                          title: Text(
-                            'ABOUT US',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          leading: Icon(Icons.info),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    about.About("About us")));
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        title: Text("Phone: +91 842 7012 721"),
-                        leading: Icon(Icons.phone),
-                      ),
-                      ListTile(
-                        title: Text("zeitgeist.pr@iitrpr.ac.in"),
-                        leading: Icon(Icons.email),
-                      ),
-                    ],
-                  ))),
+          drawer: DrawerWidget(),
           body: _home,
           bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
@@ -252,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                         Icons.star,
                         color: Colors.lightBlueAccent[400],
                       ),
-                      title: Text('Pro-Nights'),
+                      title: Text('Lectures'),
                       backgroundColor: Color.fromRGBO(166, 16, 30, 1)),
                   BottomNavigationBarItem(
                       icon: Icon(
@@ -267,7 +167,8 @@ class _HomePageState extends State<HomePage> {
           )),
     ]);
   }
-Future<List<EventModel>> getDataFromServer() async {
+
+  Future<List<EventModel>> getDataFromServer() async {
     final response = await http.get("https://advitiya.in/api/events/");
 
     if (response.statusCode == 200) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 class Schdule extends StatefulWidget {
   final List<EventModel> data;
   Schdule(this.data);
@@ -191,38 +192,6 @@ class DayOneState extends State<DayOne> {
 
 ////////////////////////////////data to test
 
-Widget _buildName({String imageAsset, String name, double score}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-    child: Column(
-      children: <Widget>[
-        SizedBox(height: 12),
-        Container(height: 2, color: Colors.redAccent),
-        SizedBox(height: 12),
-        Row(
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: AssetImage(imageAsset),
-              radius: 30,
-            ),
-            SizedBox(width: 12),
-            Text(name),
-            Spacer(),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: Text("${score}"),
-              decoration: BoxDecoration(
-                color: Colors.yellow[900],
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
 class CustomDialog extends StatelessWidget {
   final EventModel detail;
   CustomDialog(this.detail);
@@ -241,7 +210,7 @@ class CustomDialog extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top:15,left:10,right:10) ,
+            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
             height: 420.0,
             width: 300.0,
             child: Column(
@@ -282,7 +251,7 @@ class CustomDialog extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Flexible(
-                                          child: Text(
+                      child: Text(
                         detail.venue,
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -296,12 +265,11 @@ class CustomDialog extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(top: 4),
                 ),
-
- Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                        "Team Lower Limit : ",
+                      "Team Lower Limit : ",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
@@ -324,7 +292,7 @@ class CustomDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Team Upper Limit : " ,
+                      "Team Upper Limit : ",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
@@ -347,7 +315,7 @@ class CustomDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Fee(in INR) : ", 
+                      "Fee(in INR) : ",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
@@ -370,16 +338,14 @@ class CustomDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Prize(in INR) : " ,
+                      "Prize(in INR) : ",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                       
-                      (  double.parse(detail.prize)).toString()+"K",
-
+                      (double.parse(detail.prize)).toString() + "K",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 14,
@@ -395,14 +361,14 @@ class CustomDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Coordinator : " ,
+                      "Coordinator : ",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
                           fontWeight: FontWeight.bold),
                     ),
                     Flexible(
-                                          child: Text(
+                      child: Text(
                         detail.manager['name'],
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -413,63 +379,62 @@ class CustomDialog extends StatelessWidget {
                     ),
                   ],
                 ),
-               Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 4),
                 ),
-               Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                       "Contact Details : ",
+                      "Contact Details : ",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
                           fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      detail.manager['mobile'],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold),
+                    InkWell(
+                      child: Text(
+                        detail.manager['mobile'],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        launch('tel:+91 ' + detail.manager['mobile']);
+                      },
                     ),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                   
                     FlatButton(
-                    
                       child: Text("Rulebook"),
                       color: Colors.orangeAccent,
-                      onPressed:(){
-                          launch(detail.rulebook);
-                      } ,
+                      onPressed: () {
+                        launch(detail.rulebook);
+                      },
                     )
                   ],
                 ),
-
-                   Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                   
                     FlatButton(
-                     shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(18)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18)),
                       child: Text("Register"),
                       color: Colors.orangeAccent,
-                      onPressed:(){
-                          launch(  "https://www.advitiya.in/events/"+detail.id.toString()+"/");
-                      } ,
+                      onPressed: () {
+                        launch("https://www.advitiya.in/events/" +
+                            detail.id.toString() +
+                            "/");
+                      },
                     )
                   ],
                 ),
-               
-
-              
-              
-              
               ],
             ),
           ),
