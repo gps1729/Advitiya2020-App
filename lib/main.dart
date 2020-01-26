@@ -1,6 +1,7 @@
+import 'package:advitiya/Notification/firebase_notification_settings.dart';
+import 'package:advitiya/Notification/notification_page.dart';
 import 'package:advitiya/drawer.dart';
 import 'package:advitiya/model.dart';
-import 'package:advitiya/notification_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:advitiya/schdule.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    new FirebaseNotifications(context).setUpFirebase();
     _pronight = CarouselDemo();
     _shedule = _buildschedule();
     _home = _shedule;
