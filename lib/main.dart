@@ -2,6 +2,7 @@ import 'package:advitiya/Notification/firebase_notification_settings.dart';
 import 'package:advitiya/Notification/notification_page.dart';
 import 'package:advitiya/drawer.dart';
 import 'package:advitiya/model.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:advitiya/schdule.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _home, _shedule, _pronight;
-// static const platform = const MethodChannel('com.softcom.zeitgeist/map_view');
+  static const platform = const MethodChannel('com.softcom.advitiya/map_view');
 
   _buildschedule() {
     return FutureBuilder(
@@ -134,8 +135,6 @@ class _HomePageState extends State<HomePage> {
                     if (index == 0)
                       _home = _shedule;
                     else if (index == 1)
-                      _home = _pronight;
-                    else
                       _home = _pronight;
                   });
                 },
