@@ -1,3 +1,4 @@
+import 'package:advitiya/About.dart';
 import 'package:advitiya/Notification/firebase_notification_settings.dart';
 import 'package:advitiya/Notification/notification_page.dart';
 import 'package:advitiya/drawer.dart';
@@ -25,7 +26,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var _home, _shedule, _pronight;
+  var _home, _shedule, _pronight, _about;
   static const platform = const MethodChannel('com.softcom.advitiya/map_view');
 
   _buildschedule() {
@@ -71,6 +72,7 @@ class _HomePageState extends State<HomePage> {
     new FirebaseNotifications(context).setUpFirebase();
     _pronight = CarouselDemo();
     _shedule = _buildschedule();
+    _about = About();
     _home = _shedule;
     super.initState();
   }
@@ -136,6 +138,8 @@ class _HomePageState extends State<HomePage> {
                       _home = _shedule;
                     else if (index == 1)
                       _home = _pronight;
+                    else
+                      _home = _about;
                   });
                 },
                 items: [
@@ -157,10 +161,10 @@ class _HomePageState extends State<HomePage> {
                       backgroundColor: Color.fromRGBO(166, 16, 30, 1)),
                   BottomNavigationBarItem(
                       icon: Icon(
-                        Icons.map,
+                        Icons.info,
                         color: Colors.lightBlueAccent[400],
                       ),
-                      title: Text('Map'),
+                      title: Text('About Us'),
                       backgroundColor: Color.fromRGBO(166, 16, 30, 1))
                 ],
               ),

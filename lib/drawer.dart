@@ -83,21 +83,6 @@ class DrawerWidget extends StatelessWidget {
                     },
                   ),
                 ),
-                Container(
-                  child: ListTile(
-                    title: Text(
-                      'ABOUT US',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    leading: Icon(Icons.info),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              about.About("About us")));
-                    },
-                  ),
-                ),
                 ListTile(
                   title: Text("Phone: +91 8001481473"),
                   leading: Icon(Icons.phone),

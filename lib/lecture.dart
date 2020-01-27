@@ -14,22 +14,7 @@ class CarouselDemo extends StatefulWidget {
 
 class CarouselDemoState extends State<CarouselDemo>
     with SingleTickerProviderStateMixin {
-  final PageController _controller = PageController();
   Widget _body;
-  void _animateSlider(length) {
-    Future.delayed(Duration(seconds: 5)).then((_) {
-      int nextPage = _controller.page.round() + 1;
-
-      if (nextPage == length) {
-        nextPage = 0;
-      }
-
-      _controller
-          .animateToPage(nextPage,
-              duration: Duration(seconds: 1), curve: Curves.linear)
-          .then((_) => _animateSlider(length));
-    });
-  }
 
   _buildBody() {
     return FutureBuilder(
@@ -37,11 +22,8 @@ class CarouselDemoState extends State<CarouselDemo>
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           var talks = snapshot.data;
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => _animateSlider(talks.length));
           PageIndicatorContainer container = new PageIndicatorContainer(
             child: new PageView(
-                controller: _controller,
                 children: List.generate(talks.length, (index) {
                   DateTime startdateTime =
                       DateTime.parse(talks[index]['start_date_time']);
@@ -185,12 +167,6 @@ class CarouselDemoState extends State<CarouselDemo>
   void didChangeDependencies() {
     _body = _buildBody();
     super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
