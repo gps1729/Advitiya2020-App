@@ -34,11 +34,11 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Container(
-              color: Colors.black,
+              color: Colors.black87,
               child: Center(
                 child: Image.asset(
-                  'Images/appbar.png',
-                  fit: BoxFit.fill,
+                  'Images/loading.gif',
+                  fit: BoxFit.cover,
                 ),
               ));
         if (snapshot.hasData) {
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                       backgroundColor: Color.fromRGBO(166, 16, 30, 1)),
                   BottomNavigationBarItem(
                       icon: Icon(
-                        Icons.star,
+                        Icons.speaker_group,
                         color: Colors.lightBlueAccent[400],
                       ),
                       title: Text('Lectures'),

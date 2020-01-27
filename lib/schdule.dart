@@ -29,6 +29,7 @@ class _SchduleState extends State<Schdule>
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(50.0),
           child: AppBar(
+            backgroundColor: Colors.pink[900],
             elevation: 0,
             bottom: TabBar(
               controller: _tabController,
@@ -211,232 +212,233 @@ class CustomDialog extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(top: 15, left: 10, right: 10),
-            height: 420.0,
-            width: 300.0,
-            child: Column(
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: detail.avatarUrl,
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    foregroundColor: Theme.of(context).primaryColor,
-                    backgroundColor: Colors.grey,
-                    backgroundImage: imageProvider,
-                    radius: 30.0,
+           
+            child: Wrap(
+                          children: <Widget> [Column(
+                children: <Widget>[
+                  CachedNetworkImage(
+                    imageUrl: detail.avatarUrl,
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                      foregroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Colors.grey,
+                      backgroundImage: imageProvider,
+                      radius: 30.0,
+                    ),
+                    placeholder: (context, url) => Container(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  placeholder: (context, url) => Container(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                ),
-                Text(
-                  detail.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Venue : ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Flexible(
-                      child: Text(
-                        detail.venue,
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                  ),
+                  Text(
+                    detail.name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Venue : ",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Flexible(
+                        child: Text(
+                          detail.venue,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Team Lower Limit : ",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        detail.teamLowerLimit.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.black87,
                             fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Team Lower Limit : ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      detail.teamLowerLimit.toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Team Upper Limit : ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      detail.teamUpperLimit.toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Fee(in INR) : ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      detail.fee.toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Prize(in INR) : ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      (double.parse(detail.prize)).toString() + "K",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Coordinator : ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Flexible(
-                      child: Text(
-                        detail.manager['name'],
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Team Upper Limit : ",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        detail.teamUpperLimit.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.black87,
                             fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "Contact Details : ",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    InkWell(
-                      child: Text(
-                        detail.manager['mobile'],
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Fee(in INR) : ",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        detail.fee.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 14,
-                            color: Colors.blue,
+                            color: Colors.black87,
                             fontWeight: FontWeight.bold),
                       ),
-                      onTap: () {
-                        launch('tel:+91 ' + detail.manager['mobile']);
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FlatButton(
-                      child: Text("Rulebook"),
-                      color: Colors.orangeAccent,
-                      onPressed: () {
-                        launch(detail.rulebook);
-                      },
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18)),
-                      child: Text("Register"),
-                      color: Colors.orangeAccent,
-                      onPressed: () {
-                        launch("https://www.advitiya.in/events/" +
-                            detail.id.toString() +
-                            "/");
-                      },
-                    )
-                  ],
-                ),
-              ],
-            ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Prize(in INR) : ",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        (double.parse(detail.prize)).toString() + "K",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Coordinator : ",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Flexible(
+                        child: Text(
+                          detail.manager['name'],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Contact Details : ",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      InkWell(
+                        child: Text(
+                          detail.manager['mobile'],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        onTap: () {
+                          launch('tel:+91 ' + detail.manager['mobile']);
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FlatButton(
+                        child: Text("Rulebook"),
+                        color: Colors.orangeAccent,
+                        onPressed: () {
+                          launch(detail.rulebook);
+                        },
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18)),
+                        child: Text("Register"),
+                        color: Colors.orangeAccent,
+                        onPressed: () {
+                          launch("https://www.advitiya.in/events/" +
+                              detail.id.toString() +
+                              "/");
+                        },
+                      )
+                    ],
+                  ),
+                ],
+              ),
+                           ] ),
           ),
           Positioned(
             right: 0.0,
@@ -458,7 +460,8 @@ class CustomDialog extends StatelessWidget {
               ),
             ),
           ),
-        ],
+        ]
+        ,
       ),
     );
   }
