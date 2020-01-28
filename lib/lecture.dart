@@ -25,113 +25,116 @@ class CarouselDemoState extends State<CarouselDemo>
           PageIndicatorContainer container = new PageIndicatorContainer(
             child: new PageView(
                 children: List.generate(talks.length, (index) {
-                  DateTime startdateTime =
-                      DateTime.parse(talks[index]['start_date_time']);
-                  final starttime = formatDate(
-                      startdateTime, [d, ' ', M, ', ', hh, ':', nn, ' ', am]);
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                    ),
-                    child: Stack(
-                      children: <Widget>[
-                        CachedNetworkImage(
-                          imageUrl: talks[index]['image'],
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+              DateTime startdateTime =
+                  DateTime.parse(talks[index]['start_date_time']);
+              final starttime = formatDate(
+                  startdateTime, [d, ' ', M, ', ', hh, ':', nn, ' ', am]);
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    CachedNetworkImage(
+                      imageUrl: talks[index]['image'],
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
                           ),
-                          placeholder: (context, url) =>
-                              Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
                         ),
-                        Positioned(
-                          left: 20,
-                          bottom: 36,
-                          child: Container(
-                              width: MediaQuery.of(context).size.width - 20,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    blurRadius: 25.0,
-                                    spreadRadius: 7.0,
-                                  )
-                                ],
+                      ),
+                      placeholder: (context, url) => Center(
+                        child: Image.asset(
+                          'Images/loading.gif',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                    Positioned(
+                      left: 20,
+                      bottom: 36,
+                      child: Container(
+                          width: MediaQuery.of(context).size.width - 20,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black,
+                                blurRadius: 25.0,
+                                spreadRadius: 7.0,
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                talks[index]['name'],
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.normal),
                               ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(
-                                    talks[index]['name'],
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.normal),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  Column(
                                     children: <Widget>[
-                                      Column(
-                                        children: <Widget>[
-                                          Text(
-                                            'Venue: ' + talks[index]['venue'],
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            starttime,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      FlatButton(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.info,
-                                              color: Colors.white,
-                                              size: 20,
-                                            ),
-                                            Text(
-                                              ' About Speaker',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
+                                      Text(
+                                        'Venue: ' + talks[index]['venue'],
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
                                         ),
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  SpeakerDialog(talks[index]));
-                                        },
+                                      ),
+                                      Text(
+                                        starttime,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                        ),
                                       )
                                     ],
                                   ),
+                                  FlatButton(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.info,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                        Text(
+                                          ' About Speaker',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              SpeakerDialog(talks[index]));
+                                    },
+                                  )
                                 ],
-                              )),
-                        )
-                      ],
-                    ),
-                  );
-                })),
+                              ),
+                            ],
+                          )),
+                    )
+                  ],
+                ),
+              );
+            })),
             length: talks.length,
             indicatorSpace: 10,
             indicatorColor: Colors.grey[350],
@@ -157,7 +160,10 @@ class CarouselDemoState extends State<CarouselDemo>
           );
         }
         return Center(
-          child: CircularProgressIndicator(),
+          child: Image.asset(
+            'Images/loading.gif',
+            fit: BoxFit.cover,
+          ),
         );
       },
     );
@@ -182,6 +188,11 @@ class CarouselDemoState extends State<CarouselDemo>
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON.
       var jsonData = json.decode(response.body);
+      jsonData.sort((a, b) {
+        return a['start_date_time']
+            .toString()
+            .compareTo(b['start_date_time'].toString());
+      });
       return jsonData;
     } else {
       // If that call was not successful, throw an error.

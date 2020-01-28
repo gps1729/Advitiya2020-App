@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
               child: Center(
                 child: Image.asset(
                   'Images/loading.gif',
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                 ),
               ));
       },

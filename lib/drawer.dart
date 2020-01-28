@@ -74,7 +74,7 @@ class DrawerWidget extends StatelessWidget {
                   color: Colors.white,
                   child: ListTile(
                     title: Text(
-                      'SPONSERS',
+                      'SPONSORS',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     leading: Icon(Icons.attach_money),
